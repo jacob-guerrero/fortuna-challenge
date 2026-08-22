@@ -1,0 +1,33 @@
+area,prioridad,cantidad_tickets
+Aplicaciones,Alta,67
+Aplicaciones,Media,58
+Aplicaciones,Crítica,53
+Aplicaciones,Baja,43
+Calidad,Media,73
+Calidad,Alta,68
+Calidad,Baja,58
+Calidad,Crítica,55
+Comercial,Alta,92
+Comercial,Media,61
+Comercial,Crítica,57
+Comercial,Baja,35
+Compras,Alta,77
+Compras,Baja,61
+Compras,Media,57
+Compras,Crítica,51
+Contabilidad,Alta,80
+Contabilidad,Media,58
+Contabilidad,Baja,49
+Contabilidad,Crítica,43
+Infraestructura,Media,80
+Infraestructura,Alta,65
+Infraestructura,Baja,61
+Infraestructura,Crítica,55
+Operaciones,Media,72
+Operaciones,Alta,62
+Operaciones,Baja,41
+Operaciones,Crítica,40
+Talento Humano,Media,87
+Talento Humano,Alta,60
+Talento Humano,Baja,52
+Talento Humano,Crítica,38
