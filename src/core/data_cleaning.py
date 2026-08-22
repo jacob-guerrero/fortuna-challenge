@@ -1,6 +1,6 @@
 import pandas as pd
-import numpy as np
 import logging
+import unicodedata
 
 logger = logging.getLogger(__name__)
 
@@ -32,9 +32,23 @@ def normalize_category(category_series: pd.Series) -> pd.Series:
     Normaliza categorías a Title Case.
     Caso de borde: Campos nulos o vacíos se clasifican como 'Sin Clasificar'.
     """
-    s = category_series.astype(str).str.strip().str.title()
-    s = s.replace(['Nan', 'None', '', 'Null'], 'Sin Clasificar')
-    return s.fillna('Sin Clasificar')
+    def canonicalize(value: object) -> str:
+        value = str(value).strip()
+        normalized = ''.join(
+            character for character in unicodedata.normalize('NFD', value.lower())
+            if unicodedata.category(character) != 'Mn'
+        )
+        mapping = {
+            '': 'Sin Clasificar', 'nan': 'Sin Clasificar', 'none': 'Sin Clasificar',
+            'null': 'Sin Clasificar', 'acceso': 'Accesos', 'accesos': 'Accesos',
+            'gestion de accesos': 'Gestión de Accesos', 'incidente': 'Incidentes',
+            'incidentes': 'Incidentes', 'ordenes de compra': 'Órdenes de Compra',
+            'nomina': 'Nómina', 'viaticos': 'Viáticos', 'capacitacion': 'Capacitación',
+            'sin clasificar': 'Sin Clasificar',
+        }
+        return mapping.get(normalized, value.title())
+
+    return category_series.map(canonicalize)
 
 def normalize_priority(priority_series: pd.Series) -> pd.Series:
     """

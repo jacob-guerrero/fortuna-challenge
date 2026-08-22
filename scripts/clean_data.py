@@ -23,6 +23,11 @@ def clean_data(input_path: Path, output_clean: Path, output_summary: Path):
     if df.empty:
         raise ValueError("El archivo CSV está vacío.")
 
+    required_columns = {'id', 'fecha_creacion', 'fecha_cierre', 'area', 'categoria', 'prioridad'}
+    missing_columns = required_columns.difference(df.columns)
+    if missing_columns:
+        raise ValueError(f"El CSV no contiene las columnas requeridas: {', '.join(sorted(missing_columns))}")
+
     # 1. Eliminar duplicados
     initial_len = len(df)
     df = df.drop_duplicates(subset=['id'], keep='first')
@@ -51,9 +56,11 @@ def clean_data(input_path: Path, output_clean: Path, output_summary: Path):
     # 4. Normalización Categóricas
     df['categoria'] = normalize_category(df['categoria'])
     df['prioridad'] = normalize_priority(df['prioridad'])
+    df['area'] = df['area'].fillna('').astype(str).str.strip().replace('', 'Sin área')
 
     # 5. Guardar archivos
-    PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+    output_clean.parent.mkdir(parents=True, exist_ok=True)
+    output_summary.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(output_clean, index=False)
     logger.info(f"Archivo limpio en {output_clean}")
 
