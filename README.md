@@ -55,3 +55,19 @@ pytest tests/unit/ -v
 ### Qué quedó fuera (Etapa 1)
 - Por ahora, las métricas y logs no están siendo enviados a un sistema externo, solo se emiten por consola.
 - No se realizan validaciones adicionales de formato (no presentes en la prueba) en campos diferentes a los mencionados en el Anexo A.
+
+---
+
+## Etapa 2: Autonomía e integración
+
+La API propia expone tres operaciones sobre solicitudes: crear (`POST /tickets/`), consultar por identificador (`GET /tickets/{id}`) y listar con filtros de estado y área (`GET /tickets/?estado=Abierto&area=Tecnología`). Todas las respuestas de error tienen el contrato `error`, `message` y `path`.
+
+La clasificación depende de `LLMPort`, no de un proveedor concreto. En desarrollo, `AI_PROVIDER=dummy` permite ejecutar una clasificación determinista sin credenciales. Para un proveedor compatible con OpenAI, configure en `.env` `AI_PROVIDER=openai_compatible`, `AI_API_BASE_URL` y `AI_API_KEY`; el adaptador aplica timeout de 5 segundos y hasta tres intentos ante timeout, red, 429 o 5xx. Si el proveedor falla definitivamente, la solicitud se crea en modo degradado, marcada para clasificación manual.
+
+Ejecute la API con:
+
+```bash
+python -m uvicorn src.api.main:app --reload --port 8000
+```
+
+La documentación interactiva queda disponible en `http://localhost:8000/docs`. Las pruebas de la API y del modo degradado se ejecutan con `pytest -v`.
