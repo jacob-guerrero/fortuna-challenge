@@ -59,16 +59,20 @@ def filtrar_por_periodo(tickets, inicio, fin):
         fc = parsear_fecha(t.get("fecha_creacion"))
         if fc is None:
             continue
-        if fc > inicio and fc < fin:
+        # CAUSA RAÍZ (S1): La condición original `> inicio and < fin` excluía los tickets creados exactamente en el primer o último día del mes.
+        if fc >= inicio and fc <= fin:
             seleccionados.append(t)
     return seleccionados
 
 
-def resumir_por_area(tickets, acumulador={}):
+# CAUSA RAÍZ (S2): Se usaba `acumulador={}`. En Python, los diccionarios como argumentos por defecto conservan su estado en memoria, inflando las cifras en llamadas consecutivas.
+def resumir_por_area(tickets, acumulador=None):
     """Cuenta los tickets por área.
 
     Devuelve un diccionario {area: cantidad}.
     """
+    if acumulador is None:
+        acumulador = {}
     for t in tickets:
         area = (t.get("area") or "Sin area").strip()
         acumulador[area] = acumulador.get(area, 0) + 1
@@ -79,7 +83,14 @@ def contar_reaperturas(tickets):
     """Cuenta cuántos tickets fueron reabiertos al menos una vez."""
     total = 0
     for t in tickets:
-        if t.get("estado") == "reabierto":
+        # CAUSA RAÍZ (S3): Se evaluaba textualmente `t.get("estado") == "reabierto"`. Esto era sensible a mayúsculas y omitía los tickets reabiertos que ya habían sido cerrados de nuevo.
+        reaperturas = t.get("reaperturas")
+        try:
+            es_reabierto = int(reaperturas) > 0 if reaperturas else False
+        except ValueError:
+            es_reabierto = False
+
+        if es_reabierto or str(t.get("estado")).strip().lower() == "reabierto":
             total += 1
     return total
 
