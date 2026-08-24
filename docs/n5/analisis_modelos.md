@@ -1,35 +1,37 @@
-# Análisis Estratégico: Machine Learning Clásico vs LLMs para Clasificación
+# Comparación: ML clásico, LLM y RAG
 
-**Destinatario:** CTO / Dirección Técnica  
-**Autor:** Tech Lead  
-**Asunto:** Criterios técnicos para la selección y evolución de nuestra arquitectura de Inteligencia Artificial.  
+## Recomendación
 
----
+Usar ML clásico como ruta principal para clasificar R-01, RAG con respuesta
+restringida por evidencia para R-02 y automatización tradicional para R-03. Un
+LLM queda como fallback para tickets ambiguos o tareas generativas, no como
+reemplazo de reglas deterministas.
 
-## 1. Contexto Ejecutivo
-La actual implementación en *La Fortuna S.A.* utiliza Large Language Models (LLMs) complementados con RAG para clasificar tickets y extraer políticas de cumplimiento. A medida que proyectamos procesar más de 10.000 tickets diarios, es imperativo evaluar de forma objetiva si un modelo de Machine Learning Tradicional (ML Clásico) es una alternativa técnica y financieramente superior para ciertas tareas.
+| Criterio | ML clásico (R-01) | LLM (fallback/generación) | RAG (R-02) |
+|---|---|---|---|
+| Costo por 1.000 solicitudes | CPU marginal; sin costo por token | Variable por tokens del proveedor | Embeddings + tokens de redacción; controlar presupuesto |
+| Latencia | p95 ≈ 0.5 ms en el baseline local | Segundos y dependiente del proveedor | Mayor que ML; aceptable para 80 consultas/día |
+| Precisión / seguridad | Macro F1 1.00 en dataset sintético | Debe evaluarse con conjunto de referencia | Citas obligatorias y abstención sin evidencia |
+| Mantenimiento | Reentrenar al cambiar taxonomía o aparecer drift | Mantener prompt, modelo y presupuesto | Reingestar al cambiar políticas y calibrar umbral |
+| Mejor uso | Categorías estables y alto volumen | Casos ambiguos o redacción | Políticas cambiantes en lenguaje natural |
 
-## 2. Matriz de Comparación Técnica
+## Interpretación de costos
 
-| Criterio Estratégico | Machine Learning Clásico (ej. Random Forest, SVM, Regresión) | Grandes Modelos de Lenguaje (LLMs) (ej. GPT-4o, Llama 3) |
-|----------------------|--------------------------------------------------------------|----------------------------------------------------------|
-| **Costo por inferencia (Opex)** | **Extremadamente bajo.** Puede ejecutarse en CPUs económicas. | **Alto.** Costo por token (APIs) o infraestructura GPU muy cara si es on-premise. |
-| **Latencia / Velocidad** | **Milisegundos** (~10-50ms). | **Segundos** (~1000-3000ms). |
-| **Determinismo** | Altamente determinista y matemático. | Probabilístico, propenso a alucinaciones. |
-| **Capacidad Generativa** | **Nula.** Solo clasifica y predice etiquetas estáticas. | **Alta.** Capaz de resumir texto, redactar respuestas humanas y hacer RAG. |
-| **Necesidad de Datos (Cold Start)** | Requiere miles de tickets históricos correctamente etiquetados y limpios. | Funciona en *Zero-Shot* mediante prompts explicativos, sin historial previo. |
-| **Mantenimiento Operativo** | Requiere procesos MLOps para reentrenamiento continuo ante *Data Drift* (nuevas categorías). | Mantenimiento ágil basado en ajuste de prompts (Prompt Engineering) y actualización de base RAG. |
+Para 3.000 tickets diarios, una llamada LLM por ticket multiplica el gasto por
+token sin aportar una capacidad necesaria para una taxonomía estable. El
+baseline clásico procesa texto localmente en CPU. Para RAG, el menor volumen
+(80/día) permite pagar el costo de recuperación y redacción, siempre bajo el
+presupuesto y las alertas definidos en Etapa 4.
 
-## 3. ¿En qué casos abandonaríamos el LLM por ML Clásico?
-Recomiendo migrar total o parcialmente hacia modelos tradicionales (ML Clásico) bajo los siguientes escenarios:
-1. **La funcionalidad de RAG ya no aporta valor:** Si el negocio decide que "responder al usuario con políticas" y generar "resúmenes técnicos" ya no son requeridos, usar un LLM exclusivamente para predecir si un ticket es "Hardware" o "Accesos" es un desperdicio (Overkill arquitectónico).
-2. **Madurez de los datos históricos:** Contamos con un dataset impecable de cientos de miles de tickets y las taxonomías de área/categoría rara vez cambian.
-3. **Optimización extrema de costos (FinOps):** El volumen escala por encima de 50.000 tickets/día y el margen operativo se ve erosionado por la factura mensual del proveedor LLM.
-4. **SLA de latencia estricto:** El sistema requiere que la clasificación sea completamente síncrona, en tiempo real, bloqueando interfaces web que demandan tiempos de respuesta inferiores a los 200ms.
+No se publican precios fijos de proveedor: cambian con frecuencia. La estimación
+operativa usa los tokens observados por la telemetría y tarifas configuradas por
+ambiente, no valores codificados en la lógica.
 
-## 4. Recomendación Final (El Camino a Seguir)
-Para la actual fase de descubrimiento, validación e impacto al empleado, el **LLM con RAG es la opción ideal** por su versatilidad inmediata sin requerir un pipeline complejo de Data Science.
+## Limitaciones y siguiente decisión
 
-A mediano plazo (al superar la marca de los 10K tickets), sugiero transicionar hacia una **Arquitectura Híbrida (Ensemble)**:
-- Un modelo ligero y barato de ML clásico predice velozmente la `categoría` y `prioridad` como capa de enrutamiento frontal.
-- Se reserva y rutea hacia el LLM solo el "Modo Experto": tickets ambiguos, análisis de políticas y tareas de generación de resúmenes, balanceando así los costos de infraestructura mientras se maximiza la inteligencia y el SLA.
+El F1 perfecto no prueba desempeño futuro porque el histórico sintético repite
+plantillas. Antes de automatización sin revisión se debe medir una muestra de
+producción etiquetada manualmente y temporalmente separada. Si Macro F1 baja de
+0.75, una categoría cae bajo 0.70 de precisión o cambia el catálogo, esa ruta
+se envía a revisión humana/LLM y se reentrena el modelo. Esta es una decisión
+de negocio y seguridad, no solo una optimización de métrica.
