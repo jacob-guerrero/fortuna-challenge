@@ -78,7 +78,7 @@ class MockAPIClient:
         """Obtiene una solicitud por ID"""
         return self._request("GET", f"/solicitudes/{id_solicitud}")
         
-    def create_solicitud(self, asunto: str, area: str, solicitante: str, descripcion: str = ""):
+    def create_solicitud(self, asunto: str, area: str, solicitante: str, descripcion: str = "", idempotency_key: str | None = None):
         """Crea una nueva solicitud (Valida según OpenAPI schema)"""
         payload = {
             "asunto": asunto[:200],
@@ -87,4 +87,9 @@ class MockAPIClient:
             "descripcion": descripcion[:4000],
             "canal": "api"
         }
-        return self._request("POST", "/solicitudes", json=payload)
+        headers = {"Idempotency-Key": idempotency_key} if idempotency_key else None
+        return self._request("POST", "/solicitudes", json=payload, headers=headers)
+
+    def send_webhook_event(self, event: dict):
+        """Notifica al segundo sistema; el evento_id permite deduplicar reintentos."""
+        return self._request("POST", "/webhook/mensajeria", json=event)

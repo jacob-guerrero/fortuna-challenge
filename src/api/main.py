@@ -5,7 +5,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
-from src.api.routers import observability, policies, tickets
+from src.api.routers import observability, orchestration, policies, tickets
 from src.core.logging_config import configure_logging
 from src.core.telemetry import metrics_collector
 
@@ -17,6 +17,7 @@ app = FastAPI(title="Mesa de Ayuda Inteligente - API", version="1.0.0")
 app.include_router(tickets.router)
 app.include_router(policies.router)
 app.include_router(observability.router)
+app.include_router(orchestration.router)
 
 
 @app.middleware("http")
