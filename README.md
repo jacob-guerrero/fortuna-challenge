@@ -71,3 +71,17 @@ python -m uvicorn src.api.main:app --reload --port 8000
 ```
 
 La documentación interactiva queda disponible en `http://localhost:8000/docs`. Las pruebas de la API y del modo degradado se ejecutan con `pytest -v`.
+
+---
+
+## Etapa 3: RAG, calidad y observabilidad
+
+La ingesta indexa las políticas PDF en ChromaDB local con metadatos de documento, página y sección:
+
+```bash
+python -m scripts.ingest_policies
+```
+
+El endpoint `POST /politicas/consultas` recupera los tres fragmentos más relevantes y solo responde si alguno supera el umbral de similitud configurado. La respuesta incluye las fuentes; sin evidencia, devuelve `No encontré información vigente para esto.`. La base vectorial es generada y está ignorada por Git.
+
+`GET /observabilidad/resumen` expone el acumulado local de latencia, tokens y costo estimado. La integración continua ejecuta `ruff check` y `pytest` en cada envío. Consulte [el informe de seguridad](docs/security_report.md) y [el estándar de IA](docs/ai_engineering_standard.md).
