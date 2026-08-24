@@ -16,4 +16,4 @@ jobs:
       - run: pip install -r requirements.txt
       - run: ruff check src scripts tests
       - run: python -m scripts.evaluate_ticket_classifier
-      - run: pytest -v
+      - run: python -m pytest -v
