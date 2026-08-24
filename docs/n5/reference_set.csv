@@ -1,0 +1,60 @@
+case_id,type,source_ticket_id,input,expected_label,expected_document,expected_section,expected_abstained
+CLS-001,classification,TK-00183,El teclado dejó de responder,Hardware,,,false
+CLS-002,classification,TK-01349,El portátil no enciende desde ayer,Hardware,,,false
+CLS-003,classification,TK-01276,El portátil no enciende desde ayer,Hardware,,,false
+CLS-004,classification,TK-00378,Me negaron las vacaciones solicitadas,Vacaciones,,,false
+CLS-005,classification,TK-00240,Cuántos días tengo acumulados,Vacaciones,,,false
+CLS-006,classification,TK-01764,Con cuánta anticipación debo solicitar vacaciones,Vacaciones,,,false
+CLS-007,classification,TK-01545,Necesito cotización para equipos de la bodega,Compras,,,false
+CLS-008,classification,TK-01244,Estado de la orden de compra 4471,Compras,,,false
+CLS-009,classification,TK-00855,El proveedor no ha entregado lo solicitado,Compras,,,false
+CLS-010,classification,TK-00048,Se bloqueó mi usuario tras varios intentos,Gestion de Accesos,,,false
+CLS-011,classification,TK-00390,No puedo entrar al sistema Centrica,Gestion de Accesos,,,false
+CLS-012,classification,TK-00029,Solicito permiso al módulo de cartera,Gestion de Accesos,,,false
+CLS-013,classification,TK-01492,La aplicación se cierra al generar el informe,Software,,,false
+CLS-014,classification,TK-00452,Error al guardar el formulario de ingreso,Software,,,false
+CLS-015,classification,TK-01517,Necesito que instalen el visor de planos,Software,,,false
+CLS-016,classification,TK-01120,Cuál es el monto autorizado para hospedaje,Viaticos,,,false
+CLS-017,classification,TK-01552,Cómo legalizo los viáticos del viaje a la costa,Viaticos,,,false
+CLS-018,classification,TK-01542,Necesito anticipo para comisión,Viaticos,,,false
+CLS-019,classification,TK-00417,Muy lenta la conexión en la bodega,Conectividad,,,false
+CLS-020,classification,TK-00082,La VPN se desconecta cada media hora,Conectividad,,,false
+CLS-021,classification,TK-01493,Muy lenta la conexión en la bodega,Conectividad,,,false
+CLS-022,classification,TK-00614,Se bloqueó mi usuario tras varios intentos,Accesos,,,false
+CLS-023,classification,TK-01847,Necesito acceso a la carpeta compartida de mi área,Accesos,,,false
+CLS-024,classification,TK-01729,Solicito permiso al módulo de cartera,Accesos,,,false
+CLS-025,classification,TK-01025,Pérdida de información en el módulo de inventario,Incidentes,,,false
+CLS-026,classification,TK-00607,Se cayó el servicio de facturación,Incidentes,,,false
+CLS-027,classification,TK-01035,Los usuarios reportan lentitud generalizada,Incidentes,,,false
+CLS-028,classification,TK-00238,Error en el descuento de la quincena,Nómina,,,false
+CLS-029,classification,TK-01684,Solicito certificado laboral con salario,Nómina,,,false
+CLS-030,classification,TK-01728,Diferencia en el pago de horas extras,Nómina,,,false
+CLS-031,classification,TK-00088,Cuándo es la próxima inducción,Capacitación,,,false
+CLS-032,classification,TK-00215,Cuándo es la próxima inducción,Capacitación,,,false
+CLS-033,classification,TK-00650,Cuándo es la próxima inducción,Capacitación,,,false
+CLS-034,classification,TK-01632,El reporte no incluye la sede nueva,Informes,,,false
+CLS-035,classification,TK-01018,Solicito exportar el listado a Excel,Informes,,,false
+CLS-036,classification,TK-01307,Necesito el reporte de ventas del trimestre,Informes,,,false
+CLS-037,classification,TK-00682,Requerimiento del área,Otros,,,false
+CLS-038,classification,TK-00252,Pendiente por definir,Otros,,,false
+CLS-039,classification,TK-01378,Requerimiento del área,Otros,,,false
+RAG-001,rag,,¿Con cuánta anticipación debo solicitar vacaciones?,,POL-GTH-01_Vacaciones.pdf,3.1,false
+RAG-002,rag,,¿Dónde debo registrar mi solicitud de vacaciones?,,POL-GTH-01_Vacaciones.pdf,3.2,false
+RAG-003,rag,,¿Cuántos días hábiles de vacaciones causo por año?,,POL-GTH-01_Vacaciones.pdf,2,false
+RAG-004,rag,,¿Puedo fraccionar mis vacaciones?,,POL-GTH-01_Vacaciones.pdf,4.1,false
+RAG-005,rag,,¿Puedo ceder mis vacaciones a otra persona?,,POL-GTH-01_Vacaciones.pdf,8,false
+RAG-006,rag,,¿Cuál es el máximo de hospedaje en un municipio no capital?,,POL-ADM-04_Viaticos.pdf,3,false
+RAG-007,rag,,¿Con cuántos días de anticipación solicito un anticipo de viaje?,,POL-ADM-04_Viaticos.pdf,4.2,false
+RAG-008,rag,,¿En cuánto tiempo debo legalizar los viáticos?,,POL-ADM-04_Viaticos.pdf,5.1,false
+RAG-009,rag,,¿Se reconocen multas de tránsito en una comisión?,,POL-ADM-04_Viaticos.pdf,6,false
+RAG-010,rag,,¿Cuánto tarda la entrega de un teclado disponible?,,POL-TIC-02_Activos_Tecnologicos.pdf,3,false
+RAG-011,rag,,¿En cuánto tiempo debo reportar la pérdida de un portátil?,,POL-TIC-02_Activos_Tecnologicos.pdf,5.1,false
+RAG-012,rag,,¿Puedo instalar software sin autorización en mi equipo?,,POL-TIC-02_Activos_Tecnologicos.pdf,4.2,false
+RAG-013,rag,,¿Qué longitud mínima debe tener mi contraseña?,,POL-TIC-03_Gestion_de_Accesos.pdf,3,false
+RAG-014,rag,,¿Cuántos intentos fallidos bloquean una cuenta?,,POL-TIC-03_Gestion_de_Accesos.pdf,3,false
+RAG-015,rag,,¿Cuál es el tiempo máximo para atender una solicitud de acceso?,,POL-TIC-03_Gestion_de_Accesos.pdf,2.3,false
+RAG-016,rag,,¿Cuál es la primera respuesta objetivo de un incidente crítico?,,POL-TIC-05_Gestion_de_Incidentes.pdf,4,false
+RAG-017,rag,,¿Cuándo se escala un incidente crítico?,,POL-TIC-05_Gestion_de_Incidentes.pdf,5.1,false
+RAG-018,rag,,¿Puedo trabajar desde casa tres días a la semana?,,,,true
+RAG-019,rag,,¿La empresa cubre el gimnasio de los colaboradores?,,,,true
+RAG-020,rag,,¿Cuál es la política de licencia de paternidad?,,,,true
