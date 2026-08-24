@@ -12,3 +12,5 @@ class TicketResponse(BaseModel):
     area: str
     categoria: str
     prioridad: str
+    respuesta_usuario: str | None = None
+    resumen_tecnico: str | None = None

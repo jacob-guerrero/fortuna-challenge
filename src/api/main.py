@@ -1,11 +1,13 @@
 import logging
+from time import perf_counter
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
-from src.api.routers import tickets
+from src.api.routers import observability, policies, tickets
 from src.core.logging_config import configure_logging
+from src.core.telemetry import metrics_collector
 
 configure_logging()
 logger = logging.getLogger(__name__)
@@ -13,6 +15,26 @@ logger = logging.getLogger(__name__)
 app = FastAPI(title="Mesa de Ayuda Inteligente - API", version="1.0.0")
 
 app.include_router(tickets.router)
+app.include_router(policies.router)
+app.include_router(observability.router)
+
+
+@app.middleware("http")
+async def record_request_latency(request: Request, call_next):
+    started_at = perf_counter()
+    response = await call_next(request)
+    latency_ms = round((perf_counter() - started_at) * 1000, 2)
+    metrics_collector.record_request(latency_ms)
+    logger.info(
+        "Petición HTTP completada",
+        extra={
+            "event": "http_request",
+            "latency_ms": latency_ms,
+            "status_code": response.status_code,
+            "path": request.url.path,
+        },
+    )
+    return response
 
 def error_response(status_code: int, error: str, message: str, path: str) -> JSONResponse:
     return JSONResponse(status_code=status_code, content={"error": error, "message": message, "path": path})

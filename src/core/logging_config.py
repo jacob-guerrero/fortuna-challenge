@@ -15,6 +15,11 @@ class JsonFormatter(logging.Formatter):
         }
         if hasattr(record, "event"):
             event["event"] = record.event
+        for field in (
+            "latency_ms", "prompt_tokens", "completion_tokens", "cost_usd", "model", "status_code", "path", "abstained"
+        ):
+            if hasattr(record, field):
+                event[field] = getattr(record, field)
         return json.dumps(event, ensure_ascii=False)
 
 
