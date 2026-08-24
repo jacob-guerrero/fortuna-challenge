@@ -68,8 +68,10 @@ class MockAPIClient:
     def get_solicitudes(self, area: str = None, estado: str = None, limite: int = 50):
         """Obtiene la lista de solicitudes con filtros opcionales"""
         params = {"limite": limite}
-        if area: params["area"] = area
-        if estado: params["estado"] = estado
+        if area:
+            params["area"] = area
+        if estado:
+            params["estado"] = estado
         return self._request("GET", "/solicitudes", params=params)
         
     def get_solicitud(self, id_solicitud: str):

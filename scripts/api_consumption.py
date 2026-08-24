@@ -9,14 +9,14 @@ def run_demo():
     
     logger.info("--- Probando GET /solicitudes (Sin filtros) ---")
     try:
-        solicitudes = client.get_solicitudes(limite=5)
+        client.get_solicitudes(limite=5)
         logger.info("Éxito! GET (todas) respondió correctamente.")
     except Exception as e:
         logger.error(f"El GET falló irremediablemente: {str(e)}")
 
     logger.info("\n--- Probando GET /solicitudes (Filtrado por Área) ---")
     try:
-        solicitudes_area = client.get_solicitudes(area="Operaciones", limite=5)
+        client.get_solicitudes(area="Operaciones", limite=5)
         logger.info("Éxito! GET (con filtros) respondió correctamente.")
     except Exception as e:
         logger.error(f"El GET filtrado falló: {str(e)}")

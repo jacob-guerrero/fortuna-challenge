@@ -15,9 +15,16 @@ class DummyLLMAdapter(LLMPort):
         time.sleep(1)
         
         texto = texto.lower()
+        categoria = "Sin Clasificar"
+        prioridad = "Media"
         if "teclado" in texto or "pantalla" in texto or "impresora" in texto:
-            return {"categoria": "Hardware", "prioridad": "Alta"}
-        if "acceso" in texto or "bloque" in texto:
-            return {"categoria": "Gestión de Accesos", "prioridad": "Crítica"}
+            categoria, prioridad = "Hardware", "Alta"
+        elif "acceso" in texto or "bloque" in texto:
+            categoria, prioridad = "Gestión de Accesos", "Crítica"
             
-        return {"categoria": "Sin Clasificar", "prioridad": "Media"}
+        return {
+            "categoria": categoria,
+            "prioridad": prioridad,
+            "respuesta_usuario": "Esta es una respuesta simulada por el sistema Dummy.",
+            "resumen_tecnico": "Resumen simulado (Dummy Mode)."
+        }
